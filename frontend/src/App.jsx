@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import SignUp from "./pages/SignUp.jsx";
+export const serverUrl = "http://localhost:8000";
 //import SignIn from "./pages/SignIn.jsx";
 //import ForgotPassword from "./pages/forgotpassword.jsx";
 function App() {

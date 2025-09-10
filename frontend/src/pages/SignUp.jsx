@@ -3,6 +3,11 @@ import logo from "../assets/logo1.png"; // Assuming you have a logo image in ass
 import logo2 from "../assets/logo2.png"; // Assuming you have a logo image in assets folder
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
+import { serverUrl } from "../App.jsx";
+import { ClipLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
+
 
 function SignUp() {
 
@@ -13,10 +18,24 @@ function SignUp() {
     password:false
   })
   const [showPassword,setShowPassword]=useState(false);
+  const [loading,setloading]=useState(false);
   const[name,setName]=useState("");
   const[userName,setUserName]=useState("");
   const[email,setEmail]=useState("");
   const[password,setPassword]=useState("");
+  const navigate=useNavigate();
+  const handleSignUp=async()=>{
+    setloading(true);
+    try{
+      const result=await axios.post(`${serverUrl}/api/auth/signup`,
+        {name,email,userName,password},{withCredentials:true});
+        console.log(result.data);
+        setloading(false);
+    }catch(error){
+console.log(error);
+setloading(false);
+    }
+  }
   return (
     //css  for background
     <div
@@ -63,9 +82,9 @@ rounded-2xl flex justify-center items-center overflow-hidden
               id="name"
               className=" w-[100%]  h-[100%] 
                  rounded-xl px-10 py-3 text-black 
-//               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
-//               focus:shadow-[0_0_10px_#9b5de5] "
-              required onChange={(e)=>setName(e.target.value) value={name}
+              focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
+               focus:shadow-[0_0_10px_#9b5de5] "
+              required onChange={(e)=>setName(e.target.value)} value={name}
             />
           </div>
           <div
@@ -87,9 +106,9 @@ rounded-2xl flex justify-center items-center overflow-hidden
               id="userName"
               className="w-[100%]  h-[100%] 
                  rounded-xl px-10 py-3 text-black 
-//               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
-//               focus:shadow-[0_0_10px_#9b5de5]  "
-              required
+              focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
+               focus:shadow-[0_0_10px_#9b5de5]  "
+              required onChange={(e)=>setUserName(e.target.value)} value={userName}
             />
           </div>
           <div
@@ -111,9 +130,9 @@ rounded-2xl flex justify-center items-center overflow-hidden
               id="email"
               className=" w-[100%]  h-[100%] 
                  rounded-xl px-10 py-3 text-black 
-//               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
-//               focus:shadow-[0_0_10px_#9b5de5]  "
-              required
+               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
+              focus:shadow-[0_0_10px_#9b5de5]  "
+              required onChange={(e)=>setEmail(e.target.value)} value={email}
             />
           </div>
           <div
@@ -136,7 +155,7 @@ rounded-2xl flex justify-center items-center overflow-hidden
               className=" w-[100%]  h-[100%] 
                  rounded-xl px-10 py-3 text-black 
             focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
-              focus:shadow-[0_0_10px_#9b5de5]  "
+              focus:shadow-[0_0_10px_#9b5de5]  " required onChange={(e)=>setPassword(e.target.value)} value={password}
             />
             {!showPassword ? (
               <FaEye
@@ -153,17 +172,14 @@ rounded-2xl flex justify-center items-center overflow-hidden
             )}
           </div>
           <button
-            type="submit"
+            type="button"
             className=" w-[75%] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
               text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
-              focus:shadow-[0_0_15px_#9b5de5] "
-          >
-            {" "}
-            SignUp
+              focus:shadow-[0_0_15px_#9b5de5] "onClick={handleSignUp} disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"SignUp"}
           </button>
 
-          <p className="cursor-pointer text-gray-800">
-            Already Have an account? <span className="border-b-2 border-b-black pb-[3px]text-black ">Sign In</span>
+          <p className="cursor-pointer text-gray-800" onClick={()=>navigate('/signin')}>
+            Already Have An Account? <span className="border-b-2 border-b-black pb-[3px]text-black ">Sign In</span>
           </p>
         </div>
         {/* Right side of the sign-up form */}

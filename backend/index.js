@@ -13,7 +13,7 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     origin: "http://localhost:5173", //frontend url
-    withCredentials: true, //
+    credentials: true, //
   })
 );
 app.use(express.json()); //it will tell the routes that what ever data is coming from frontend is in json format so that we will not  get the error of undefined
