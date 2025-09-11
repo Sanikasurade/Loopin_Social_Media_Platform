@@ -1,8 +1,9 @@
+// import { set } from "mongoose";
 import React,{ useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 function ForgotPassword() {
-   const [step, setStep] = useState(3); // define step
+   const [step, setStep] = useState(1); // define step
    const[inputClicked,setInputClicked]=useState({
       email:false,
       otp:false,
@@ -14,7 +15,47 @@ function ForgotPassword() {
    const [loading,setLoading]=useState(false);
    const[newPassword,setNewPassword]=useState("");
    const[confirmNewPassword,setConfirmPassword]=useState("");
-  
+   
+   const handleStep1=async()=>{ 
+    setLoading(true)
+    try{
+const result=await axios.post(`${serverUrl}/api/auth/sendOtp`,{email},{withCredentials:true})
+console.log(result.data)
+setStep(2) 
+setLoading(false)   
+}catch(error){
+  console.log(error)
+setLoading(false)
+
+    }
+  }
+  const handleStep2=async()=>{
+    setLoading(true) 
+    try{
+const result=await axios.post(`${serverUrl}/api/auth/verifyOtp`,{email,otp},{withCredentials:true})
+console.log(result.data) 
+setStep(3)   
+setLoading(false)
+}catch(error){
+  console.log(error)
+setLoading(false)
+
+    }
+  }
+  const handleStep3=async()=>{ 
+    setLoading(true)
+    try{
+      if(newPassword!==confirmNewPassword){
+        alert("passwords do not match")
+        return;
+      }
+const result=await axios.post(`${serverUrl}/api/auth/resetPassword`,{email,newPassword},{withCredentials:true})
+console.log(result.data)    
+}catch(error){
+  console.log(error)
+
+    }
+  }
     return(
         <div className="w-full h-screen  bg-gradient-to-b from-black
  to-gray-900 flex flex-col justify-center items-center">
@@ -62,7 +103,7 @@ function ForgotPassword() {
    mt-[30px] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
     text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
     focus:shadow-[0_0_15px_#9b5de5]
-  " disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"Send Email"}
+  " disabled={loading} onClick={handleStep1}>{loading?<ClipLoader size={30} color="white"/>:"Send Email"}
           </button>
          </div>}
     {step==2 && <div className='w-[90%] max-w-[500px] h-[400px] bg-white
@@ -107,7 +148,7 @@ function ForgotPassword() {
    mt-[30px] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
     text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
     focus:shadow-[0_0_15px_#9b5de5]
-  " disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"Submit"}
+  " disabled={loading} onClick={handleStep2}>{loading?<ClipLoader size={30} color="white"/>:"Submit"}
           </button>
 
     </div>}
@@ -178,7 +219,7 @@ function ForgotPassword() {
    mt-[30px] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
     text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
     focus:shadow-[0_0_15px_#9b5de5]
-  " disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"Submit"}
+  " disabled={loading} onClick={handleStep3}>{loading?<ClipLoader size={30} color="white"/>:"Submit"}
           </button>
 
       </div>}

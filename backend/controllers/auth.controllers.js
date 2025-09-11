@@ -85,9 +85,13 @@ export const signOut = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: `signOut error ${error}` });
   }
+
+
+
+ 
 };
 // step1=> taking the email from  user
-const sendOtp=async(req,res)=>{
+export const sendOtp=async(req,res)=>{
   try{
     const {email}=req.body  //getting email from req.body
     const user = await User.findOne({email})
@@ -110,3 +114,42 @@ const sendOtp=async(req,res)=>{
   }
 
 }
+
+// step2 => verifying the otp
+export const verifyOtp=async(req,res)=>{
+  try{
+    const{email,otp}=req.body
+  const user=await User.findOne({email})
+  if(!user || user.resetOtp != otp || user.otpExpires<Date.now()){
+  return req.status(400).json({message:"invalid / expired otp"})
+  }
+  user.isOtpVerified=true
+  user.resetOtp=undefined
+  user.otpExpires=undefined
+  await user.save()
+  return res.status(200).json({message:"otp verified"})
+  }catch(error){
+    return res.status(500).json({message:`verify otp ${error} `})
+
+}
+}
+
+// step3 => resetting the new password
+export const resetPassword=async(req,res)=>{
+  try{
+    const{email,password}=req.body
+    const user=await User.findOne({email})
+    if(!user || !user.isOtpVerified){
+      return res.status(400).json({message:"otp verification required"})
+    }
+    const hashedPassword=bcrypt.hash(password,10)
+    user.password=hashedPassword
+    user.isOtpVerified=false
+    await user.save()
+  
+    return res.status(500).json({message:"password reset successfully"})
+  
+  }catch{error}{
+    return res.status(500).json({message:`reset otp error ${error} `})
+  }
+  }
