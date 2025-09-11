@@ -44,7 +44,7 @@ setloading(false);
     >
       {/* Main container for the sign-up form */}
       <div
-        className="w-[90%] lg:max-w-[60%] h-[590px] bg-white 
+        className="w-[90%] lg:max-w-[60%] h-[530px] bg-white 
 rounded-2xl flex justify-center items-center overflow-hidden
  border-2 border-[#1a1f23]"
       >
@@ -173,9 +173,16 @@ rounded-2xl flex justify-center items-center overflow-hidden
           </div>
           <button
             type="button"
-            className=" w-[75%] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
-              text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
-              focus:shadow-[0_0_15px_#9b5de5] "onClick={handleSignUp} disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"SignUp"}
+            className="
+    w-[75%] 
+    sm:w-[70%]   /* Added → for small screens */
+    md:w-[60%]   /* Added → for medium screens */
+    lg:w-[75%]   /* Added → for large screens */
+    xl:w-[50%]   /* Added → for extra-large screens */
+    bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
+    text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
+    focus:shadow-[0_0_15px_#9b5de5]
+  "onClick={handleSignUp} disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"SignUp"}
           </button>
 
           <p className="cursor-pointer text-gray-800" onClick={()=>navigate('/signin')}>

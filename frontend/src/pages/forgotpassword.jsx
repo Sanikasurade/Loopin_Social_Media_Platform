@@ -1,88 +1,188 @@
-// import React from "react";
-// import { FaEnvelope } from "react-icons/fa";
-// import { Link } from "react-router-dom";
-// import logo from "../assets/logo1.png";
+import React,{ useState } from "react";
+import { ClipLoader } from "react-spinners";
 
-// function ForgotPassword() {
-//   return (
-//     <div className="w-full h-screen flex flex-col justify-center items-center relative overflow-hidden bg-white">
-//       {/* Main container */}
-//       <div
-//         className="relative w-[90%] sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[35%] 
-//         bg-black rounded-2xl flex justify-center items-center overflow-hidden
-//         border border-gray-300 shadow-2xl z-10 py-8"
-//       >
-//         {/* Content container */}
-//         <div className="w-full flex flex-col items-center px-8 gap-6">
-//           {/* Logo + Title */}
-//           <div className="flex flex-col items-center">
-//             <img
-//               src={logo}
-//               alt="Loopin Logo"
-//               className="w-[120px] h-auto object-contain drop-shadow-lg"
-//             />
-//             <span className="mt-3 text-lg font-bold text-white">
-//               Reset Your{" "}
-//               <span className="bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] bg-clip-text text-transparent">
-//                 LOOPIN
-//               </span>{" "}
-//               Password
-//             </span>
-//           </div>
+function ForgotPassword() {
+   const [step, setStep] = useState(3); // define step
+   const[inputClicked,setInputClicked]=useState({
+      email:false,
+      otp:false,
+      newPassword:false,
+      confirmNewPassword:false
+   })
+   const [email,setEmail]=useState("");
+   const [otp,setOtp]=useState("");
+   const [loading,setLoading]=useState(false);
+   const[newPassword,setNewPassword]=useState("");
+   const[confirmNewPassword,setConfirmPassword]=useState("");
+  
+    return(
+        <div className="w-full h-screen  bg-gradient-to-b from-black
+ to-gray-900 flex flex-col justify-center items-center">
 
-//           {/* Description */}
-//           <p className="text-gray-400 text-sm text-center max-w-[280px]">
-//             Enter your email address and we'll send you a link to reset your
-//             password.
-//           </p>
+      {/* Step1 */}
 
-//           {/* Forgot Password Form */}
-//           <form className="flex flex-col gap-4 w-full max-w-[300px]">
-//             {/* Email with icon on right */}
-//             <div className="relative">
-//               <input
-//                 type="email"
-//                 placeholder="Enter your email"
-//                 className="w-full border border-gray-600 rounded-xl px-4 py-3 pr-12 text-white bg-gray-800
-//                 focus:outline-none focus:ring-2 focus:ring-[#00bbf9] shadow-sm
-//                 focus:shadow-[0_0_12px_#00bbf9] placeholder-gray-400"
-//               />
-//               <FaEnvelope className="absolute right-4 top-3.5 text-gray-400" />
-//             </div>
+      {step==1 && <div className='w-[90%] max-w-[500px] h-[400px] bg-white
+     rounded-2xl flex justify-center items-center flex-col border-[#1a1f23]'>
+         <h2 className='text-[30px] font-semibold'>Enter Email To get OTP</h2>
+         <div
+            className="relative flex items-center mt-[30px] justify-start w-
+          [90%] h-[50px] rounded-2xl  border-2 border-black"
+            onClick={() => setInputClicked({ ...inputClicked,email:true })}
+          >
+            <label
+              htmlFor="email"
+              className={`text-gray-700 absolute 
+            left-[20px] p-[5px] bg-white text-[15px] ${
+              inputClicked.email ? "top-[-15px]" : ""
+            }`}
+            >
+              Enter email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className=" w-[100%]  h-[100%] 
+                 rounded-xl px-10 py-3 text-black 
+               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
+              focus:shadow-[0_0_10px_#9b5de5]  "
+              required onChange={(e)=>setEmail(e.target.value)} value={email}
+            />
+          </div>
 
-//             {/* Submit button */}
-//             <button
-//               type="submit"
-//               className="bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
-//               text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
-//               focus:shadow-[0_0_15px_#9b5de5] mt-2"
-//             >
-//               Send Reset Link
-//             </button>
-//           </form>
+         
+          
+          <button
+            type="button"
+            className="
+    w-[55%] 
+    sm:w-[70%]   /* Added → for small screens */
+    md:w-[60%]   /* Added → for medium screens */
+    lg:w-[50%]   /* Added → for large screens */
+    xl:w-[50%]   /* Added → for extra-large screens */
+   mt-[30px] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
+    text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
+    focus:shadow-[0_0_15px_#9b5de5]
+  " disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"Send Email"}
+          </button>
+         </div>}
+    {step==2 && <div className='w-[90%] max-w-[500px] h-[400px] bg-white
+     rounded-2xl flex justify-center items-center flex-col border-[#1a1f23]'>
 
-//           {/* Navigation Links */}
-//           <div className="flex flex-col items-center gap-2">
-//             <Link
-//               to="/signin"
-//               className="text-[#9b5de5] text-sm font-semibold cursor-pointer hover:underline"
-//             >
-//               Back to Sign In
-//             </Link>
-//             <p className="text-gray-400 text-sm">
-//               Don't have an account?{" "}
-//               <Link
-//                 to="/signup"
-//                 className="text-[#9b5de5] font-semibold cursor-pointer hover:underline"
-//               >
-//                 Sign Up
-//               </Link>
-//             </p>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+       <h2 className='text-[30px] font-semibold'>forgot Password</h2>
+       <div
+            className="relative flex items-center mt-[30px] justify-start w-
+          [90%] h-[50px] rounded-2xl  border-2 border-black"
+            onClick={() => setInputClicked({ ...inputClicked,otp:true })}
+          >
+            <label
+              htmlFor="otp"
+              className={`text-gray-700 absolute 
+            left-[20px] p-[5px] bg-white text-[15px] ${
+              inputClicked.otp ? "top-[-15px]" : ""
+            }`}
+            >
+              Enter OTP
+            </label>
+            <input
+              type="email"
+              id="otp"
+              className=" w-[100%]  h-[100%] 
+                 rounded-xl px-10 py-3 text-black 
+               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
+              focus:shadow-[0_0_10px_#9b5de5]  "
+              required onChange={(e)=>setOtp(e.target.value)} value={otp}
+            />
+          </div>
 
-// export default ForgotPassword;
+         
+          
+          <button
+            type="button"
+            className="
+    w-[55%] 
+    sm:w-[70%]   /* Added → for small screens */
+    md:w-[60%]   /* Added → for medium screens */
+    lg:w-[50%]   /* Added → for large screens */
+    xl:w-[50%]   /* Added → for extra-large screens */
+   mt-[30px] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
+    text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
+    focus:shadow-[0_0_15px_#9b5de5]
+  " disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"Submit"}
+          </button>
+
+    </div>}
+
+    {/* Step2 */}
+    {step==3 && <div className='w-[90%] max-w-[500px] h-[400px] bg-white
+     rounded-2xl flex justify-center items-center flex-col border-[#1a1f23]'>
+      <h2 className='text-[30px] font-semibold'>Reset Password</h2>
+
+       {/* Div for Confirm Password */}
+         <div
+            className="relative flex items-center mt-[30px] justify-start w-
+          [90%] h-[50px] rounded-2xl  border-2 border-black"
+            onClick={() => setInputClicked({ ...inputClicked,newPassword:true})}
+          >
+            <label
+              htmlFor="newPassword"
+              className={`text-gray-700 absolute 
+            left-[20px] p-[5px] bg-white text-[15px] ${
+              inputClicked.newPassword ? "top-[-15px]" : ""
+            }`}
+            >
+              Enter New Password
+            </label>
+            <input
+              type="text"
+              id="newPassword"
+              className=" w-[100%]  h-[100%] 
+                 rounded-xl px-10 py-3 text-black 
+               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
+              focus:shadow-[0_0_10px_#9b5de5]  "
+              required onChange={(e)=>setNewPassword(e.target.value)} value={newPassword}
+            />
+          </div>
+           {/* Div for Confirm Password */}
+          <div
+            className="relative flex items-center mt-[30px] justify-start w-
+          [90%] h-[50px] rounded-2xl  border-2 border-black"
+            onClick={() => setInputClicked({ ...inputClicked,confirmNewPassword:true})}
+          >
+            <label
+              htmlFor="confirmNewPassword"
+              className={`text-gray-700 absolute 
+            left-[20px] p-[5px] bg-white text-[15px] ${
+              inputClicked.confirmNewPassword ? "top-[-15px]" : ""
+            }`}
+            >
+              Enter Confirm Password
+            </label>
+            <input
+              type="text"
+              id="confirmNewPassword"
+              className=" w-[100%]  h-[100%] 
+                 rounded-xl px-10 py-3 text-black 
+               focus:outline-none focus:ring-2 focus:ring-[#9b5de5] shadow-sm
+              focus:shadow-[0_0_10px_#9b5de5]  "
+              required onChange={(e)=>setConfirmPassword(e.target.value)} value={confirmNewPassword}
+            />
+          </div>
+          <button
+            type="button"
+            className="
+    w-[55%] 
+    sm:w-[70%]   /* Added → for small screens */
+    md:w-[60%]   /* Added → for medium screens */
+    lg:w-[50%]   /* Added → for large screens */
+    xl:w-[50%]   /* Added → for extra-large screens */
+   mt-[30px] bg-gradient-to-r from-[#00f5d4] via-[#00bbf9] to-[#9b5de5] 
+    text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition-all
+    focus:shadow-[0_0_15px_#9b5de5]
+  " disabled={loading}>{loading?<ClipLoader size={30} color="white"/>:"Submit"}
+          </button>
+
+      </div>}
+ </div>
+    )
+}
+export default ForgotPassword;
