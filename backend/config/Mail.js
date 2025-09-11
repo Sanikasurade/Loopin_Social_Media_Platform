@@ -18,5 +18,6 @@ const sendMail=async(to,otp)=>{
     subject:"Reset Your Password",
     html:`<p>Your OTP for password reset reset is <b>${otp}</b>It expires in 5 minutes.</p>`
 })
+
 }
 export default sendMail;

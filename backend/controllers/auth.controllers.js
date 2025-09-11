@@ -1,6 +1,7 @@
 import genToken from "../config/token.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import sendMail from "../config/Mail.js"
 
 export const signUp = async (req, res) => {
   try {
@@ -85,3 +86,27 @@ export const signOut = async (req, res) => {
     return res.status(500).json({ message: `signOut error ${error}` });
   }
 };
+// step1=> taking the email from  user
+const sendOtp=async(req,res)=>{
+  try{
+    const {email}=req.body  //getting email from req.body
+    const user = await User.findOne({email})
+    if(!email){
+      return res.status(400).json({message:"User not found"})
+    }
+    //generating otp using Math.random , Math.floor will not generate the otp in decimal point
+    const otp=Math.floor(1000 + Math.random()* 9000 ).toString()
+     
+    user.resetOtp=otp,
+    user.otpExpires=new Date.now() + 5*60*1000 
+    user.isOtpVerified=false
+
+    await user.save()
+    await sendMail(email,otp)
+    return Response.status(200).json({message:"email send successfully"})
+  }catch(error){
+    return res.status(500).json({message:`send otp ${error} `})
+
+  }
+
+}
