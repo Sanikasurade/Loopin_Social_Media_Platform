@@ -1,4 +1,6 @@
 // import { set } from "mongoose";
+import axios from "axios";
+import { serverUrl } from "../App.jsx";
 import React,{ useState } from "react";
 import { ClipLoader } from "react-spinners";
 
@@ -47,10 +49,19 @@ setLoading(false)
     try{
       if(newPassword!==confirmNewPassword){
         alert("passwords do not match")
+        // setLoading(false)
         return;
       }
-const result=await axios.post(`${serverUrl}/api/auth/resetPassword`,{email,newPassword},{withCredentials:true})
-console.log(result.data)    
+const result=await axios.post(`${serverUrl}/api/auth/resetPassword`,{email,password:newPassword,},{withCredentials:true})
+console.log(result.data)
+setLoading(false)
+
+alert("Password reset successful")
+setStep(1)
+setEmail("");
+setOtp("");
+setNewPassword("");
+setConfirmPassword("");    
 }catch(error){
   console.log(error)
 
