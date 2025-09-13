@@ -95,19 +95,19 @@ export const sendOtp=async(req,res)=>{
   try{
     const {email}=req.body  //getting email from req.body
     const user = await User.findOne({email})
-    if(!email){
+    if(!user){
       return res.status(400).json({message:"User not found"})
     }
     //generating otp using Math.random , Math.floor will not generate the otp in decimal point
     const otp=Math.floor(1000 + Math.random()* 9000 ).toString()
      
     user.resetOtp=otp,
-    user.otpExpires=new Date.now() + 5*60*1000 
+    user.otpExpires= Date.now() + 5*60*1000 
     user.isOtpVerified=false
 
     await user.save()
-    await sendMail(email,otp)
-    return Response.status(200).json({message:"email send successfully"})
+    sendMail(email,otp)
+    return res.status(200).json({message:"email send successfully"})
   }catch(error){
     return res.status(500).json({message:`send otp ${error} `})
 
@@ -121,7 +121,7 @@ export const verifyOtp=async(req,res)=>{
     const{email,otp}=req.body
   const user=await User.findOne({email})
   if(!user || user.resetOtp != otp || user.otpExpires<Date.now()){
-  return req.status(400).json({message:"invalid / expired otp"})
+  return res.status(400).json({message:"invalid / expired otp"})
   }
   user.isOtpVerified=true
   user.resetOtp=undefined
@@ -135,21 +135,41 @@ export const verifyOtp=async(req,res)=>{
 }
 
 // step3 => resetting the new password
-export const resetPassword=async(req,res)=>{
-  try{
-    const{email,password}=req.body
-    const user=await User.findOne({email})
-    if(!user || !user.isOtpVerified){
-      return res.status(400).json({message:"otp verification required"})
+// export const resetPassword=async(req,res)=>{
+//   try{
+//     const{email,password}=req.body
+//     const user=await User.findOne({email})
+//     if(!user || !user.isOtpVerified){
+//       return res.status(400).json({message:"otp verification required"})
+//     }
+//     const hashedPassword=await bcrypt.hash(password,10)
+//     user.password=hashedPassword
+//     user.isOtpVerified=false
+//     await user.save()
+  
+//     return res.status(500).json({message:"password reset successfully"})
+  
+//   }catch{error}{
+//     return res.status(200).json({message:`reset otp error ${error} `})
+//   }
+//   }
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user || !user.isOtpVerified) {
+      return res.status(400).json({ message: "otp verification required" });
     }
-    const hashedPassword=bcrypt.hash(password,10)
-    user.password=hashedPassword
-    user.isOtpVerified=false
-    await user.save()
-  
-    return res.status(500).json({message:"password reset successfully"})
-  
-  }catch{error}{
-    return res.status(500).json({message:`reset otp error ${error} `})
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.isOtpVerified = false;
+    await user.save();
+
+    return res.status(200).json({ message: "password reset successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: `reset password error ${error}` });
   }
-  }
+};
+
