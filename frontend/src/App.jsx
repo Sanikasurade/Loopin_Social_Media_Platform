@@ -7,10 +7,12 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import Home from "./pages/Home.jsx";
 import getCurrentUser from "./hooks/getCurrentUser.jsx";
 import { useSelector } from "react-redux";
+import getSuggestedUsers from "./hooks/getSuggestedUsers.jsx";
 
 
 function App() {
   getCurrentUser();
+  getSuggestedUsers();
   const {userData}=useSelector(state=>state.user)
  
   return (
