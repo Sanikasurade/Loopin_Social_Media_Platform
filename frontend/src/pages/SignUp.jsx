@@ -7,7 +7,8 @@ import axios from "axios";
 import { serverUrl } from "../App.jsx";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-
+import{useDispatch} from "react-redux"
+import { setUserData } from "../redux/userSlice.js";
 
 function SignUp() {
 
@@ -24,13 +25,18 @@ function SignUp() {
   const[email,setEmail]=useState("");
   const[password,setPassword]=useState("");
   const navigate=useNavigate();
+  const dispatch=useDispatch();
+  // console.log(userData)
   const handleSignUp=async()=>{
     setloading(true);
+    
     try{
       const result=await axios.post(`${serverUrl}/api/auth/signup`,
         {name,userName,email,password},{withCredentials:true});
-        console.log(result.data);
+        // console.log(result.data);
+        dispatch(setUserData(result.data));
         setloading(false);
+        navigate("/signin");
     }catch(error){
 console.log(error);
 setloading(false);
