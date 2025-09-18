@@ -8,15 +8,26 @@ const uploadOnCloudinary=async(file)=>{
   api_secret: process.env.CLOUDINARY_API_SECRET,
 
 });
-const result=await cloudinary.uploader /*responsible (cloudinary.uploader.upload)for uploading the file*/
+
+/*responsible (cloudinary.uploader.upload)for uploading the file*/
+const result=await cloudinary.uploader
 .upload(file,{
     resource_type:'auto'    /*set to auto mean sit can upload video or images*/
 })
-fs.unlinksync(file)
+
+// Delete local file after successful upload
+fs.unlinkSync(file)
+
 return result.secure_url
+
   }catch(error){
 console.log(error)
-fs.unlinksync(file)
+// Try deleting file if it exists
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file);
+    }
+
+    throw error; // rethrow so caller knows it failed
   }
 
 }

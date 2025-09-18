@@ -26,21 +26,21 @@ const users=await User.find({
 export const editProfile=async(req,res)=>{
   try{
     const {name,userName,bio,profession,gender}=req.body
-    const user=await User.findById(req.userId).select
-    ("-password")
+    const user=await User.findById(req.userId).select("-password")
     if(!user){
       return res.status(400).json({message:"user not found"})
     }
-    const sameUserWithUserName=await User.findOne({userName}).
-    select("-password")
+    const sameUserWithUserName=await User.findOne({userName}).select("-password")
 
-    if(sameUserWithUserName && sameUserWithUserName._id!=req.userId){
-      return res.status(400).json({message:"userName already exist"})
+    if(sameUserWithUserName && sameUserWithUserName._id.toString() !=req.userId){
+      return res.status(400).json({message:"UserName already exist"})
     }
     let profileImage;
     if(req.file){
-      profileImage=await uploadOnCloudinary(req.file.path)
+       profileImage=await uploadOnCloudinary(req.file.path)
+    
     }
+   
 user.name=name
 user.userName=userName
 user.profileImage=profileImage
@@ -52,7 +52,9 @@ await user.save()
 return res.status(200).json(user)
 
   }catch(error){
-    return res.status(500).json({message:`edit profile error `})
+    console.log("Edit Profile Error: ",error);
+    
+    return res.status(500).json({message:`edit profile error ${error.message} `})
 
   }
 }

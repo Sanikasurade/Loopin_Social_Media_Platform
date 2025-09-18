@@ -8,6 +8,7 @@ import Home from "./pages/Home.jsx";
 import getCurrentUser from "./hooks/getCurrentUser.jsx";
 import { useSelector } from "react-redux";
 import getSuggestedUsers from "./hooks/getSuggestedUsers.jsx";
+import Profile from "./pages/Profile.jsx";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Route path="/signin" element={!userData?<SignIn />:<Navigate to={"/"}/>} /> 
       <Route path="/" element={userData?<Home />:<Navigate to={"/signin"}/>} />
       <Route path="/forgotpassword" element={!userData?<ForgotPassword />:<Navigate to={"/"}/>}/>
+      <Route path="/profile/:userName" element={userData?<Profile />:<Navigate to={"/signin"}/>} />
     </Routes>
   );
 }
