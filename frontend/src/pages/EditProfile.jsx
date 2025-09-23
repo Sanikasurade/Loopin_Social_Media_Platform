@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import dp1 from "../assets/dp1.jpg";
 import { setProfileData, setUserData } from "../redux/userSlice";
 import { ClipLoader } from "react-spinners";
+import axios from "axios";
+import { serverUrl } from "../App.jsx";
 
 function EditProfile() {
   const { userData } = useSelector((state) => state.user);
@@ -34,23 +36,24 @@ function EditProfile() {
   const handleEditProfile = async () => {
  setLoading(true)
     try {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("userName", userName);
-      formData.append("bio", bio);
-      formData.append("profession", profession);
-      formData.append("gender", gender);
+      const formdata = new FormData();
+      formdata.append("name", name);
+      formdata.append("userName", userName);
+      formdata.append("bio", bio);
+      formdata.append("profession", profession);
+      formdata.append("gender", gender);
       if(backendImage){
-        formData.append()
+        formdata.append("profileImage",backendImage)
       }
-      const result = await axios.post('${serverUrl}/api/user/editProfile',formData,{withCredentials:true});
+      const result = await axios.post(`${serverUrl}/api/user/editProfile`,formdata,{withCredentials:true});
       dispatch(setProfileData(result.data))
       dispatch(setUserData(result.data))
       setLoading(false)
       navigate(`/profile/${userData.userName}`)
     } catch (error) {
+      setLoading(false)
         console.log(error);
-        setLoading(false);
+        
         
 
     }
