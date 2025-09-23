@@ -18,7 +18,7 @@ function Nav() {
         flex justify-around items-center fixed bottom-[20px]
          rounded-full shadow-2xl shadow-[#000000] z-[100]'>
             {/* Navigation content goes here */}
-           <div> <FaHome className='text-white w-[25px] h-[25px]'/></div>
+           <div onClick={()=>navigate("/")}> <FaHome className='text-white w-[25px] h-[25px]'/></div>
            <div><FaSearch className='text-white w-[25px] h-[25px]' /></div>
             <div><FaSquarePlus className='text-white w-[25px] h-[25px]' /></div>
              {/* Profile image */}
