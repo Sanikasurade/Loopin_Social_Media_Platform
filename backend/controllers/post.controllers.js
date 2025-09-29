@@ -2,7 +2,7 @@ import uploadOnCloudinary from '../config/cloudinary.js'
 import  Post from "../models/post.model.js"
 import User from '../models/user.model.js'
 
-export const uploadpost=async(req,res)=>{
+export const uploadPost=async(req,res)=>{
     try{
         const {caption,mediaType}=req.body
         let media;
@@ -24,14 +24,14 @@ export const uploadpost=async(req,res)=>{
         return res.status(201).json(populatedPost)
 
     } catch (error) {
-        return res.status().json({message:`UploadPost error ${Error}`})
+        return res.status(500).json({message:`UploadPost error ${error}`})
 
     }
 }
 
 export const getAllPosts=async(req,res)=>{
     try{
-        const posts = await Post.find({ author: req, userId }).populate(
+        const posts = await Post.find({}).populate(
           "author", "name userName profileImage");
             return res.status(200).json(posts)
     } catch(error){
@@ -71,7 +71,7 @@ const post=await Post.findById(postId)
 if(!post){
     return res.status(400).json({message:"post not found"})
 }
-post.comment.push=push({
+post.comments.push({
     author:req.userId,
     message
 })
@@ -95,7 +95,7 @@ export const saved=async(req,res)=>{
         user.saved = user.saved.filter(
           (id) => id.toString() !=postId.toString());
     }else{
-        user.saved.push(req.postId)
+        user.saved.push(postId)
     }
     await user.save()
     user.populate("saved");
