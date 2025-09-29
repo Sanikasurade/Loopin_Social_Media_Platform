@@ -3,10 +3,15 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { FaSquarePlus } from "react-icons/fa6";
 import { useState } from "react"; 
-import { set } from "mongoose";
 import VideoPlayer from "../components/VideoPlayer";
 import axios from "axios";
 import { serverUrl } from "../App.jsx";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { setPostData } from "../redux/postSlice.js";
+import { setLoopData } from "../redux/loopSlice.js";
+import { ClipLoader } from "react-spinners";
+
 
 function Upload() {
   const navigate = useNavigate();
@@ -16,6 +21,10 @@ function Upload() {
    const [caption,setCaption]=useState("");
    const [mediaType,setMediaType]=useState(null);
    const mediaInput=React.useRef();
+  const dispatch=useDispatch();
+  const {postData}=useSelector(state=>state.post);
+  const {loopData}=useSelector(state=>state.post);
+  const [loading,setLoading]=useState(false); 
 
    const handleMedia=(e)=>{
     const file=e.target.files[0];
@@ -34,14 +43,21 @@ function Upload() {
 
 const uploadPost=async()=>{
   try{
+    
+    if(!backendMedia){
+        alert("Please select a file first!");
+        return;
+    }
     const formData=new FormData();
     formData.append("caption",caption);
     formData.append("mediaType",mediaType);
     formData.append("media",backendMedia);
-
+    
     const result=await axios.post(`${serverUrl}/api/post/upload`,formData,{withCredentials:true})
-    console.log("Upload success: ",result.data);
+    dispatch(setPostData([...postData,result.data]));
      alert("Post uploaded successfully!");
+      setLoading(false);
+      navigate("/");
   }catch(error){
     console.error("Upload post error: ",error.response?.data || error.message);
     alert("Upload failed! Check console for details.");
@@ -55,15 +71,19 @@ const uploadLoop= async () => {
 
     const result = await axios.post(`${serverUrl}/api/loop/upload`, formData, {
       withCredentials: true})
-    console.log("Loop upload success:", result.data);
+       dispatch(setLoopData([...loopData,result.data]));
+    // console.log("Loop upload success:", result);
+    setLoading(false);
+    navigate("/");
        alert("Loop uploaded successfully!");
   } catch (error) {
-    console.error("Upload loop error:", error.response?.data || error.message);
+    console.error(` upload Loop Error: ${error}`);
       alert("Upload failed! Check console for details.");
   }
 };
 
 const handleUpload = async () => {
+  setLoading(true);
   if (!backendMedia) {
     alert("Please select a file first!");
     return;
@@ -158,7 +178,7 @@ const handleUpload = async () => {
       </div>}
         {/* Upload Button */}
       {frontendMedia && <button className="px-[10px] w-[60%] max-w-[400px]
-      py-[5px] h-[50px] bg-[white] mt-[50px] cursor-pointer rounded-2xl" onClick={handleUpload}>Upload {uploadType}</button>}
+      py-[5px] h-[50px] bg-[white] mt-[50px] cursor-pointer rounded-2xl" onClick={handleUpload}>{loading?<ClipLoader size={30} color='black'/>:`Upload ${uploadType}`}</button>}
 
     </div>
   

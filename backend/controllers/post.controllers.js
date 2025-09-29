@@ -4,6 +4,7 @@ import User from '../models/user.model.js'
 
 export const uploadPost=async(req,res)=>{
     try{
+        
         const {caption,mediaType}=req.body
         let media;
         if(req.file){
@@ -20,7 +21,7 @@ export const uploadPost=async(req,res)=>{
 
         const populatedPost=await Post.findById(post._id).
         populate("author","name userName profileImage")
-
+        // console.log("printing data:",populatedPost);
         return res.status(201).json(populatedPost)
 
     } catch (error) {

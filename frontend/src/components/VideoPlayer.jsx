@@ -1,14 +1,14 @@
-import { set } from 'mongoose';
-import React from 'react';
-import { FaVolumeHigh } from "react-icons/fa6";
-import { FaVolumeXmark } from "react-icons/fa6";
-import { useRef } from 'react';
-import { useState } from 'react';
 
-const VideoPlayer = (media) => {
+import React from 'react';
+import { FaVolumeHigh, FaVolumeXmark} from "react-icons/fa6";
+import { useRef,useState } from 'react';
+
+
+const VideoPlayer = ({media}) => {
     const videoTag=useRef();
     const [mute,setMute]=useState(true);
     const [isPlaying,setIsPlaying]=useState(true);
+
 const handleClick=()=>{
     if(isPlaying){
         videoTag.current.pause();
@@ -23,9 +23,9 @@ const handleClick=()=>{
       <div className="h-[100%] relative cursor-pointer max-w-full rounded-2xl overflow-hidden">
         <video
           ref={videoTag}
-          src="media"
+          src={media}
           type="video/mp4"
-          autoplay
+          autoPlay
           loop
           muted={mute}
           className="h-[100%] relative  
@@ -33,8 +33,9 @@ const handleClick=()=>{
           onClick={handleClick}
         />
 
-        <div className='absolute bottom-[10px] right-[10px] ' onClick={()=>{setMute(prev=>!prev)}}>
-            {!mute ? <FaVolumeHigh /> : <FaVolumeXmark />}</div>
+        <div className='absolute bottom-[10px] right-[10px] ' onClick={()=>setMute(prev=>!prev)}>
+            {mute ? <FaVolumeHigh /> : <FaVolumeXmark />}
+            </div>
       </div>
     );
 };
