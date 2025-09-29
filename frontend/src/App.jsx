@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import getSuggestedUsers from "./hooks/getSuggestedUsers.jsx";
 import Profile from "./pages/Profile.jsx";
 import EditProfile from "./pages/EditProfile.jsx";
+import Upload from "./pages/Upload.jsx";
 
 
 function App() {
@@ -19,13 +20,34 @@ function App() {
  
   return (
     <Routes>
-      
-      <Route path="/signup" element={!userData?<SignUp />:<Navigate to={"/"}/>} />
-      <Route path="/signin" element={!userData?<SignIn />:<Navigate to={"/"}/>} /> 
-      <Route path="/" element={userData?<Home />:<Navigate to={"/signin"}/>} />
-      <Route path="/forgotpassword" element={!userData?<ForgotPassword />:<Navigate to={"/"}/>}/>
-      <Route path="/profile/:userName" element={userData?<Profile />:<Navigate to={"/signin"}/>} />
-      <Route path='/editprofile' element={userData?<EditProfile/>:<Navigate to={"/signin"}/>}/>
+      <Route
+        path="/signup"
+        element={!userData ? <SignUp /> : <Navigate to={"/"} />}
+      />
+      <Route
+        path="/signin"
+        element={!userData ? <SignIn /> : <Navigate to={"/"} />}
+      />
+      <Route
+        path="/"
+        element={userData ? <Home /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/forgotpassword"
+        element={!userData ? <ForgotPassword /> : <Navigate to={"/"} />}
+      />
+      <Route
+        path="/profile/:userName"
+        element={userData ? <Profile /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/editprofile"
+        element={userData ? <EditProfile /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/upload"
+        element={userData ? <Upload /> : <Navigate to={"/signin"} />}
+      />
     </Routes>
   );
 }
