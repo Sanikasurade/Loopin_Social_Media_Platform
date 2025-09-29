@@ -16,13 +16,15 @@ const result=await cloudinary.uploader
 })
 
 // Delete local file after successful upload
-fs.unlinkSync(file)
+if (fs.existsSync(file)) {
+      fs.unlinkSync(file);
+    }
 
 return result.secure_url
 
   }catch(error){
-console.log(error)
-// Try deleting file if it exists
+console.log("Cloudinary upload error",error)
+ // Ensure we attempt to delete file if it exists
     if (fs.existsSync(file)) {
       fs.unlinkSync(file);
     }
