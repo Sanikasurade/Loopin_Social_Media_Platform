@@ -1,9 +1,9 @@
 import mongoose from "mongoose"
 const postSchema= new mongoose.Schema({
     author:{
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-        reuired:true
+        required:true
     },
     mediaType:{
         type:String,
@@ -19,13 +19,13 @@ const postSchema= new mongoose.Schema({
     },
     likes:[
         {
-        type:mongoose.Schema.types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"User",
         }
     ],
     comments:[{
         author:{
-        type:mongoose.Schema.Types.Object.Id,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"User",},
         message:{
             type:String
