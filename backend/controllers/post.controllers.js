@@ -33,7 +33,7 @@ export const uploadPost=async(req,res)=>{
 export const getAllPosts=async(req,res)=>{
     try{
         const posts = await Post.find({}).populate(
-          "author", "name userName profileImage");
+          "author", "name userName profileImage").sort({created:-1});
             return res.status(200).json(posts)
     } catch(error){
         return res.status(500).json({message:`getallpost error ${error}`})

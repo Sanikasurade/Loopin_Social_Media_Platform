@@ -110,14 +110,9 @@ function LeftHome() {
     }
 
     return (
-        <div className="w-[25%] hidden lg:block min-h-[100vh] bg-[black]
-         border-r-2 border-gray-900">
-            {/* Sidebar container: 
-                - 25% width
-                - hidden on small screens (visible on lg+ screens)
-                - full height of viewport
-                - black background
-                - right border */}
+        <div className="w-[25%] hidden lg:block h-screen bg-black
+ border-r-2 border-gray-900 overflow-y-auto ">
+           
             
             <div className="w-full flex items-center justify-between p-[20px]">
                 {/* Top section: logo + heart icon */}

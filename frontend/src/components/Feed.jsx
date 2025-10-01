@@ -6,10 +6,17 @@ import { FaRegHeart } from "react-icons/fa";
 // Importing heart icon (outlined heart) from react-icons library
 import Nav from './Nav.jsx';
 // Importing Nav component (navigation bar)
+import Post from './Post.jsx';
+// Importing Post component (individual post display)
+import { useSelector } from 'react-redux';
+// Importing useSelector hook from react-redux to access Redux store
+
+
 function Feed() {
+    const {postData}=useSelector(state=>state.post)
     return (
         <div className="lg:w-[50%] w-full
-         bg-black min-h-[100vh] lg:h[100vh] relative 
+         bg-black min-h-[100vh] lg:h-[100vh] relative 
          lg:overflow-y-auto">
             <div className="w-full flex items-center justify-between p-[20px] lg:hidden">
                             {/* Top section: logo + heart icon */}
@@ -28,6 +35,10 @@ function Feed() {
           items-center gap-[20px] p-[10px] pt-[40px] bg-white
            relative pb-[120px]'>
             <Nav/>
+            {postData?.map((post,index)=>(
+                <Post postData={post} key={index}/>
+            ))}
+            {/* Rendering Post components for each post in postData */}
            </div>
         </div>
     );

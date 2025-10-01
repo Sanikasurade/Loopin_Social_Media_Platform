@@ -23,7 +23,7 @@ function Upload() {
    const mediaInput=React.useRef();
   const dispatch=useDispatch();
   const {postData}=useSelector(state=>state.post);
-  const {loopData}=useSelector(state=>state.post);
+  const {loopData}=useSelector(state=>state.loop);
   const [loading,setLoading]=useState(false); 
 
    const handleMedia=(e)=>{
@@ -137,8 +137,8 @@ const handleUpload = async () => {
       </div>
             {/* File Upload Box */}
 
-     { !frontendMedia && <div
-        className="w-[80%] max-w-[500px] h-[250px] bg-[#0e1316]
+     { !frontendMedia && 
+     <div className="w-[80%] max-w-[500px] h-[250px] bg-[#0e1316]
       border-gray-800 border-2 flex flex-col items-center justify-center 
       gap-[8px] mt-[15vh] rounded-2xl cursor-pointer hover:bg-[#353a3d]"
         onClick={() => mediaInput.current.click()}>
@@ -152,22 +152,21 @@ const handleUpload = async () => {
 
       {frontendMedia && <div className="w-[80%] max-w-[500px] h-[250px] 
       border-gray-800 border-2 flex flex-col items-center justify-center 
-      gap-[8px] mt-[15vh]">
+       mt-[15vh]">
 
         {mediaType=="image" && <div className="w-[80%] max-w-[500px] h-[250px] 
-       flex flex-col items-center justify-center 
-      gap-[8px] mt-[5vh]"> 
+       flex flex-col items-center justify-center mt-[5vh]"> 
      
-      <img src={frontendMedia} alt="uploaded media" className=" h-[60%] roundd-2xl"/>
+      <img src={frontendMedia} alt="" className=" h-[60%] rounded-2xl"/>
 
-           {uploadType!="story" && <input type="text" className="w-full border-b-gray-400 
+           {uploadType!="story" && <input type='text' className="w-full border-b-gray-400 
            border-b-2 outline-none px-[10px] py-[5px] text-white mt-[20px]" 
            placeholder='Write a caption...' onChange={(e)=>setCaption(e.target.value)} value={caption}/>}
       </div>}
 
       {mediaType=="video" && <div className="w-[80%] max-w-[500px] h-[250px] bg-[#0e1316]
       border-gray-800 border-2 flex flex-col items-center justify-center 
-      gap-[8px] mt-[5vh]"> 
+      mt-[5vh]"> 
       <VideoPlayer media={frontendMedia}/>
       {uploadType!="story" &&
         <input type="text" className="w-full border-b-gray-400 border-b-2 

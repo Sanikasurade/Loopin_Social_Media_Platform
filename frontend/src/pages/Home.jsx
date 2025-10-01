@@ -4,7 +4,7 @@ import RightHome from "../components/RightHome.jsx";
 import Feed from "../components/Feed.jsx";  
 function Home(){
     return(
-        <div className="w-full flex justify center items-center">
+        <div className="w-full flex h-screen justify-center items-center">
 <LeftHome/>
 <Feed/>
 <RightHome/>
