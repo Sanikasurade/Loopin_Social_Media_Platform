@@ -36,7 +36,7 @@ function Feed() {
            relative pb-[120px]'>
             <Nav/>
             {postData?.map((post,index)=>(
-                <Post postData={post} key={index}/>
+                <Post post={post} key={index}/>
             ))}
             {/* Rendering Post components for each post in postData */}
            </div>
