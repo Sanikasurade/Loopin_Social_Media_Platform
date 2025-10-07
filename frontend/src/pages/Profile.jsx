@@ -7,6 +7,9 @@ import { serverUrl } from "../App.jsx";
 import { IoArrowBackOutline } from "react-icons/io5";
 import dp1 from "../assets/dp.jpg";
 import Nav from "../components/Nav.jsx";
+import FollowButton from "../components/FollowButton.jsx";
+import Post from "../components/Post.jsx";
+import { useState } from "react";
 
 
 function Profile() {
@@ -14,6 +17,8 @@ function Profile() {
   const dispatch = useDispatch();
   const navigate=useNavigate();
   const { profileData,userData } = useSelector((state) => state.user);
+  const { postData } = useSelector((state) => state.post);
+  const [postType,setPostType]=useState("posts")
   const handleProfile = async () => {
     try {
       const result = await axios.get(
@@ -71,6 +76,7 @@ function Profile() {
         className="w-full h-[150px] flex items-start gap-[29px]
    lg:gap[50px] pt[10px] px-[10px] justify-center"
       >
+        
         {/* Profile image */}
         <div
           className="w-[50px] h-[50px] border-2 border-black
@@ -110,28 +116,19 @@ function Profile() {
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-2">
             {/* stacked profile images */}
-            <div className="flex">
-              <div className="w-[35px] h-[35px] border-2 border-black rounded-full overflow-hidden">
+            <div className="flex relative">
+
+              {profileData?.followers?.slice(0,3).map((user,index)=>
+              (
+              <div className={`w-[35px] h-[35px] border-2 border-black rounded-full 
+              cursor-pointer overflow-hidden ${index>0?`absoluteleft-[${index*9}px]`:""}`}>
                 <img
-                  src={profileData?.profileImage || dp1}
+                  src={user.profileImage || dp1}
                   alt=""
                   className="w-full object-cover"
                 />
               </div>
-              <div className="-ml-4 w-[35px] h-[35px] border-2 border-black rounded-full overflow-hidden">
-                <img
-                  src={profileData?.profileImage || dp1}
-                  alt=""
-                  className="w-full object-cover"
-                />
-              </div>
-              <div className="-ml-4 w-[35px] h-[35px] border-2 border-black rounded-full overflow-hidden">
-                <img
-                  src={profileData?.profileImage || dp1}
-                  alt=""
-                  className="w-full object-cover"
-                />
-              </div>
+              ))}    
             </div>
 
             {/* count */}
@@ -150,28 +147,17 @@ function Profile() {
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-2">
             {/* stacked profile images */}
-            <div className="flex">
-              <div className="w-[35px] h-[35px] border-2 border-black rounded-full overflow-hidden">
+             <div className="flex relative">
+             {profileData?.following?.slice(0,3).map((user,index)=>
+              (
+              <div className={`w-[35px] h-[35px] border-2 border-black rounded-full cursor-pointer overflow-hidden ${index>0?`absolute left-[${index*9}px]`:""}`}>
                 <img
-                  src={profileData?.profileImage || dp1}
+                  src={user.profileImage || dp1}
                   alt=""
                   className="w-full object-cover"
                 />
               </div>
-              <div className="-ml-4 w-[35px] h-[35px] border-2 border-black rounded-full overflow-hidden">
-                <img
-                  src={profileData?.profileImage || dp1}
-                  alt=""
-                  className="w-full object-cover"
-                />
-              </div>
-              <div className="-ml-4 w-[35px] h-[35px] border-2 border-black rounded-full overflow-hidden">
-                <img
-                  src={profileData?.profileImage || dp1}
-                  alt=""
-                  className="w-full object-cover"
-                />
-              </div>
+              ))} 
             </div>
 
             {/* count */}
@@ -196,9 +182,9 @@ function Profile() {
         )}
         {profileData?._id !== userData?._id && (
           <>
-            <button className="px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[#ffffffe8] text-black cursor-pointer rounded-2xl">
-              Follow
-            </button>
+          <FollowButton tailwind={"px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[#ffffffe8] text-black cursor-pointer rounded-2xl"}
+          targetUserId={profileData?._id} onFollowChange=
+          {handleProfile}/>
             <button className="px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[#ffffffe8] text-black cursor-pointer rounded-2xl">
               Message
             </button>
@@ -207,8 +193,38 @@ function Profile() {
       </div>
 
       <div className="w-full min-h-[100vh] flex justify-center">
-<div className="w-full max-w-[900px] flex flex-col items-center rounded-t-[30px] bg-white relative gap-[20px] pt-[30px] ">
+<div className="w-full max-w-[900px] flex flex-col items-center rounded-t-[30px] bg-white relative gap-[20px] pt-[30px] pb-[100px]">
+  <div
+        className="w-[80%] max-w-[600px] h-[80px] bg-[white] rounded-full
+         flex justify-around items-center gap-[10px]"
+      >
+        <div
+          className={`${
+            postType == "posts"
+              ? "bg-black shadow-2xl shadow-black text-white": ""} w-[28%] h-[80%] flex justify-center items-center text-[19px]
+        font-semibold hover:bg-black rounded-full hover:text-white
+        cursor-pointer hover:shadow-2xl hover:shadow-black`}
+        onClick={() => setPostType("posts")}
+        >
+          Posts
+        </div>
+        <div
+          className={`${
+            postType == "saved"
+              ? "bg-black shadow-2xl shadow-black text-white"
+              : ""
+          } w-[28%] h-[80%] flex justify-center items-center text-[19px]
+        font-semibold hover:bg-black rounded-full hover:text-white
+        cursor-pointer hover:shadow-2xl hover:shadow-black`}
+          onClick={() => setPostType("saved")}
+        >
+          Saved
+        </div>
+      </div>
 <Nav/>
+{postData.map((post,index)=>(
+  post.author?._id==profileData?._id && <Post post={post}/>
+))}
 </div>
       </div>
     </div>

@@ -15,28 +15,59 @@ import { IoSendSharp } from "react-icons/io5";
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { serverUrl } from '../App.jsx';
+import { setLoopData } from '../redux/loopSlice.js';
 // Importing backend server URL from App.jsx (to hit API routes)
+import { setPostData } from '../redux/postSlice.js';
+import { useState } from 'react';
+import { setUserData } from '../redux/userSlice.js';
+import FollowButton from './FollowButton.jsx';
 
 
 function Post({post}) {
-    const userData=useSelector(state=>state.user.userData)
-    const postData=useSelector(state=>state.post.post)
-    const [showComment,setShowComment]=React.useState(true);
+    const {userData} = useSelector(state=>state.user)
+    const {postData} = useSelector(state=>state.post)
+    const [showComment,setShowComment]= useState(false);
+    const [message,setMessage]=useState("");
     const dispatch=useDispatch();
 
 
     const handleLike=async()=>{
         try{
             // API call to like/unlike the post
-            const result=await axios.post(`${serverUrl}/api/post/like/${postData._id}`,{withCredentials:true})
+            const result=await axios.get(`${serverUrl}/api/post/like/${post._id}`,{withCredentials:true})
             // Update the post data in Redux store (if needed)
             const updatedPost=result.data;
             // You can dispatch an action to update the post in the Redux store here
 
-            const updatedPosts=postData.map(p=p._id==post._id?updatedPost:p)>
-
+            const updatedPosts=postData.map(p=>p._id===post._id?updatedPost:p)
+            dispatch(setPostData(updatedPosts))
         }catch(error){
             console.log(error)
+        }
+    }
+const handleComment=async()=>{
+        try{
+            // API call to comment on the post
+            const result=await axios.post(`${serverUrl}/api/post/comment/${post._id}`,{message},{withCredentials:true})
+            // Update the post data in Redux store (if needed)
+            const updatedPost=result.data;
+            // You can dispatch an action to update the post in the Redux store here
+
+            const updatedPosts=postData.map(p=>p._id==post._id?updatedPost:p)
+            dispatch(setPostData(updatedPosts))
+        }catch(error){
+            console.log(error.response)
+        }
+    }
+
+    const handleSaved=async()=>{
+        try{
+            // API call to like/unlike the post
+            const result=await axios.get(`${serverUrl}/api/post/saved/${post._id}`,{withCredentials:true})
+            dispatch(setUserData(result.data))
+           
+        }catch(error){
+            console.log(error.response)
         }
     }
 
@@ -47,7 +78,7 @@ function Post({post}) {
         <div className='w-full h-[80px] flex  justify-between items-center px-[10px]'>
             <div className='flex  justify-center items-center  md:gap-[20px] gap-[10px]'>
                 {/* Post header: user info */}
-                {/* Profile image */}
+                {/* Profile image of the post*/}
                 <div className='w-[40px] h-[40px] md:w-[60px] md:h-[60px] border-2 border-black
                     rounded-full cursor-pointer overflow-hidden'> 
                     <img src={ post.author?.profileImage || dp1} alt="" className='w-full object-cover'/>
@@ -56,8 +87,10 @@ function Post({post}) {
                 <div className='w-[200px] font-semibold truncate'>{post.author.userName}
                 </div>
             </div>
-        <button className='p-[10px] w-[80px] md:w-[100px] py-[5px] h-[30px] md:h-[40px]
-        bg-[black] text-white rounded-2xl text-[14px] md:text-[16px]'>Follow</button>
+            {userData._id !== post.author._id &&  <FollowButton
+  tailwind="px-[10px] w-[80px] md:w-[100px] py-[5px] h-[30px] md:h-[40px] bg-black text-white rounded-2xl text-[14px] md:text-[16px]"
+  targetUserId={post.author._id} />}
+           
         </div>
         {/* Media Section */}
         {/* Conditionally render image or video based on mediaType */}
@@ -79,21 +112,21 @@ function Post({post}) {
       <div className='w-full h-[60px] flex justify-between items-center
        px-[20px] mt-[10px]'>
         {/* Interaction Section: Like, Commente buttons */}
-        <div className='flex justify-center items-center gap-[20px] text-[20px] cursor-pointer'>
+        <div className='flex justify-center items-center gap-[20px] text-[20px] cursor-pointer' onClick={handleLike}>
           <div className='flex justify-center items-center gap-[5px]'>
-            {!postData.likes.includes(userData._id) && <GoHeart className='w-[25px] h-[25px] cursor pointer ' />}
-            {postData.likes.includes(userData._id) && <GoHeartFill className='w-[25px] h-[25px] cursor pointer text-red-600' />}
-            <span>{postData.likes.length}</span>
+            {!post.likes?.includes(userData._id) && <GoHeart className='w-[25px] h-[25px] cursor pointer ' />}
+            {post.likes?.includes(userData._id) && <GoHeartFill className='w-[25px] h-[25px] cursor pointer text-red-600' />}
+            <span>{post.likes.length}</span>
           </div>
-          <div className='flex justify-center items-center gap-[5px]'>
+          <div className='flex justify-center items-center gap-[5px]'onClick={()=>setShowComment(prev=>!prev)}>
             <MdComment className='w-[25px] h-[25px] cursor pointer '/>
-            <span>{postData.comments.length}</span>
+            <span>{post.comments.length}</span>
             </div>  
         </div>
 
-        <div>
-        {!userData.saved.includes(postData?._id) &&  <FaRegBookmark className='w-[25px] h-[25px] cursor pointer '/>} 
-        {userData.saved.includes(postData?._id) &&  <FaBookmark className='w-[25px] h-[25px] cursor pointer  '/>}   
+        <div className='cursor-pointer'onClick={handleSaved}> 
+        {!userData.saved.includes(post?._id) &&  <FaRegBookmark className='w-[25px] h-[25px] cursor pointer '/>} 
+        {userData.saved.includes(post?._id) &&  <FaBookmark className='w-[25px] h-[25px] cursor pointer  '/>}   
         </div>
       </div>
 
@@ -115,9 +148,29 @@ function Post({post}) {
                     {/* Show user's profile image, else fallback to default dp */}
                 </div>
                     <input type="text" className='px-[10px] border-b-2 border-b-gray-500
-                    w-[90%] outline-none h-[40px] placeholder="Write a comment..."' />
-                    <button className='absolute right-[20px] cursor-pointer'><IoSendSharp className='w-[25px]
+                    w-[90%] outline-none h-[40px] placeholder="Write a comment..."' 
+                    onChange={(e)=>setMessage(e.target.value)} value={message}/>
+                    <button className='absolute right-[20px] cursor-pointer'
+                     onClick={handleComment}><IoSendSharp className='w-[25px]
                     h-[25px]' /></button>
+                </div>
+                <div className='w-full max-h-[300px] overflow-auto'>
+                {post.comments.map((com,index)=>(
+                    <div key={index} className=' w-full flex items-center gap-[20px] px-[20px] py-[20px] border-t-2 border-t-gray-200'>
+                    
+                        {/* Profile image of the user who have commented */}
+                <div className='w-[40px] h-[40px] md:w-[60px] md:h-[60px] border-2 border-black
+                    rounded-full cursor-pointer overflow-hidden'> 
+                    <img src={ com.author?.profileImage || dp1} alt="" className='w-full object-cover'/>
+                    {/* Show user's profile image, else fallback to default dp */}
+                </div>
+                <div>{com.message}</div>
+                    </div>
+                   
+                ))}
+                
+                {/* Mapping through comments array to display each comment */}
+                {/* Each comment shows the commenter's profile image and message */}
                 </div>
             </div>
         }
