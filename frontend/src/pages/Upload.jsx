@@ -71,7 +71,7 @@ const uploadLoop= async () => {
 
     const result = await axios.post(`${serverUrl}/api/loop/upload`, formData, {
       withCredentials: true})
-       dispatch(setLoopData([...loopData,result.data]));
+       dispatch(setLoopData([result.data,...loopData]));
     // console.log("Loop upload success:", result);
     setLoading(false);
     navigate("/");

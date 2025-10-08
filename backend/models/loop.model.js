@@ -29,7 +29,7 @@ const loopSchema = new mongoose.Schema(
            }
        }]
   },
-  { timeStamp: true }
+  { timestamps: true }
 );
 const Loop=mongoose.model("Loop",loopSchema)
 export default Loop

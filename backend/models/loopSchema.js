@@ -27,7 +27,7 @@ const loopSchema = new mongoose.Schema(
       },
     ],
   },
-  { timeStamp: true }
+  { timestamps: true }
 );
 const Loop=mongoose.Model("Loop",loopSchema)
 export default Loop

@@ -12,6 +12,7 @@ import Post from "../components/Post.jsx";
 import { useState } from "react";
 
 
+
 function Profile() {
   const { userName } = useParams();
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ function Profile() {
   const { profileData,userData } = useSelector((state) => state.user);
   const { postData } = useSelector((state) => state.post);
   const [postType,setPostType]=useState("posts")
+
   const handleProfile = async () => {
     try {
       const result = await axios.get(
@@ -113,15 +115,15 @@ function Profile() {
         </div>
 
         {/* followers section */}
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2">
+        <div>
+          <div className="flex items-center justify-center gap-[20px]">
             {/* stacked profile images */}
             <div className="flex relative">
 
               {profileData?.followers?.slice(0,3).map((user,index)=>
               (
               <div className={`w-[35px] h-[35px] border-2 border-black rounded-full 
-              cursor-pointer overflow-hidden ${index>0?`absoluteleft-[${index*9}px]`:""}`}>
+              cursor-pointer overflow-hidden ${index > 0 ? `absolute left-[${index*9}px]` : ""}`}>
                 <img
                   src={user.profileImage || dp1}
                   alt=""
@@ -144,13 +146,14 @@ function Profile() {
         </div>
 
         {/* following section */}
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2">
+        <div>
+          <div className="flex items-center justify-center gap-[20px]">
             {/* stacked profile images */}
              <div className="flex relative">
              {profileData?.following?.slice(0,3).map((user,index)=>
               (
-              <div className={`w-[35px] h-[35px] border-2 border-black rounded-full cursor-pointer overflow-hidden ${index>0?`absolute left-[${index*9}px]`:""}`}>
+              <div className={`w-[35px] h-[35px] border-2 border-black rounded-full cursor-pointer overflow-hidden
+               ${ index > 0 ? `absolute left-[${index*9}px]` : ""}`}>
                 <img
                   src={user.profileImage || dp1}
                   alt=""
@@ -194,7 +197,8 @@ function Profile() {
 
       <div className="w-full min-h-[100vh] flex justify-center">
 <div className="w-full max-w-[900px] flex flex-col items-center rounded-t-[30px] bg-white relative gap-[20px] pt-[30px] pb-[100px]">
-  <div
+
+{profileData?._id==userData._id && <div
         className="w-[80%] max-w-[600px] h-[80px] bg-[white] rounded-full
          flex justify-around items-center gap-[10px]"
       >
@@ -220,11 +224,24 @@ function Profile() {
         >
           Saved
         </div>
-      </div>
-<Nav/>
-{postData.map((post,index)=>(
-  post.author?._id==profileData?._id && <Post post={post}/>
+      </div>} 
+  
+      <Nav/>
+{profileData?._id==userData._id && <>
+{postType=="posts" && postData.map((post,index)=>(
+  post.author?._id===profileData?._id && <Post post={post} key={post._id || index}/>
 ))}
+{postType=="saved" && postData.map((post,index)=>(
+  userData.saved.includes(post._id) && <Post post={post}/>
+))}
+
+</>
+}
+{profileData?._id!==userData._id && 
+ postData.map((post,index)=>(
+  post.author?._id===profileData?._id && <Post post={post} key={post._id || index}/>
+))}
+
 </div>
       </div>
     </div>
