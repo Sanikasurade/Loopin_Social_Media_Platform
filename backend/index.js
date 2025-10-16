@@ -7,6 +7,7 @@ import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/post.routes.js";
 import loopRouter from "./routes/loop.routes.js";
+import messageRouter from "./routes/message.routes.js";
 dotenv.config();
 
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/auth", authRouter); //it will add the api/auth in front of all rou
 app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
 app.use("/api/loop", loopRouter);
+app.use("/api/message",messageRouter)
 
 
 app.listen(port, () => {

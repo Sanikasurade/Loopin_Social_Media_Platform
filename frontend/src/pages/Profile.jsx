@@ -10,6 +10,7 @@ import Nav from "../components/Nav.jsx";
 import FollowButton from "../components/FollowButton.jsx";
 import Post from "../components/Post.jsx";
 import { useState } from "react";
+import { setSelectedUser } from "../redux/messageSlice.js";
 
 
 
@@ -188,7 +189,10 @@ function Profile() {
           <FollowButton tailwind={"px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[#ffffffe8] text-black cursor-pointer rounded-2xl"}
           targetUserId={profileData?._id} onFollowChange=
           {handleProfile}/>
-            <button className="px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[#ffffffe8] text-black cursor-pointer rounded-2xl">
+            <button className="px-[10px] min-w-[150px] py-[5px] 
+            h-[40px] bg-[#ffffffe8] text-black cursor-pointer
+             rounded-2xl"onClick={()=>{dispatch(setSelectedUser(profileData))
+              navigate("/messageArea")}}>
               Message
             </button>
           </>
