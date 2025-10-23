@@ -8,9 +8,10 @@ import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/post.routes.js";
 import loopRouter from "./routes/loop.routes.js";
 import messageRouter from "./routes/message.routes.js";
+import { app, server } from "./socket.js";
 dotenv.config();
 
-const app = express();
+
 const port = process.env.PORT || 5000;
 
 app.use(
@@ -29,7 +30,7 @@ app.use("/api/loop", loopRouter);
 app.use("/api/message",messageRouter)
 
 
-app.listen(port, () => {
+server.listen(port, () => {
   connectDb();
   console.log("Server is started");
 });

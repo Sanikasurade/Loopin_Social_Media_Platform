@@ -21,7 +21,7 @@ import { setPostData } from '../redux/postSlice.js';
 import { useState } from 'react';
 import { setUserData } from '../redux/userSlice.js';
 import FollowButton from './FollowButton.jsx';
-
+import { useNavigate } from 'react-router-dom';
 
 function Post({post}) {
     const {userData} = useSelector(state=>state.user)
@@ -29,6 +29,7 @@ function Post({post}) {
     const [showComment,setShowComment]= useState(false);
     const [message,setMessage]=useState("");
     const dispatch=useDispatch();
+    const navigate=useNavigate();
 
 
     const handleLike=async()=>{
@@ -76,7 +77,7 @@ const handleComment=async()=>{
     <div className='w-[90%] min-h-[450px] flex flex-col gap-[10px] 
     bg-white items-center shadow-2xl shadow[#00000058] rounded-2xl pb-[20px]'>
         <div className='w-full h-[80px] flex  justify-between items-center px-[10px]'>
-            <div className='flex  justify-center items-center  md:gap-[20px] gap-[10px]'>
+            <div className='flex  justify-center items-center  md:gap-[20px] gap-[10px]' onClick={()=>navigate(`/profile/${post.author?.userName}`)}>
                 {/* Post header: user info */}
                 {/* Profile image of the post*/}
                 <div className='w-[40px] h-[40px] md:w-[60px] md:h-[60px] border-2 border-black

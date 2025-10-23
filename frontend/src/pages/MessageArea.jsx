@@ -13,6 +13,7 @@ import { serverUrl } from "../App.jsx";
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setMessages } from '../redux/messageSlice';
+import ReceiverMessage from '../components/ReceiverMessage.jsx'
 
 
 
@@ -29,8 +30,9 @@ function MessageArea() {
     // to handle image selection
     const handleImage=(e)=>{
     const file=e.target.files[0];
+    if(!file) return;
     setBackendImage(file);
-    setFrontendImage(URL.createObjectURL(file));
+    setFrontendImage(URL.createObjectURL(file)); // ✅ create preview URL
     
 
     }
@@ -38,10 +40,22 @@ function MessageArea() {
     const handleSendMessage=async(e)=>{
       e.preventDefault()     // prevent form from reloading
       try{
-        const result=await axios.post(`${serverUrl}/api/message/send/${selectedUser._id}`,{message:input},
-          {withCredentials:true})
+        const formData=new FormData()
+        formData.append("message",input)
+        if(backendImage){
+          formData.append("image",backendImage)
+        }
+        const result=await axios.post(`${serverUrl}/api/message/send/${selectedUser._id}`,formData,{withCredentials:true,
+          headers: {
+          "Content-Type": "multipart/form-data",  // required for image upload
+        },
+        })
+        console.log("image is send from the frontend")
           dispatch(setMessages([...messages,result.data]))
           setInput("");
+          setBackendImage(null);
+          setFrontendImage(null);
+
       }catch(error){
         console.error('Error sending message:', error);
 
@@ -49,6 +63,7 @@ function MessageArea() {
     }
     const getAllMessages=async()=>{
       try{
+        
         const result=await axios.get(`${serverUrl}/api/message/getAll/${selectedUser._id}`,
         {withCredentials:true})
         dispatch(setMessages(result.data))
@@ -82,7 +97,7 @@ function MessageArea() {
           </div>
 
 
-          <div className='w-full h-[80%] pt-[100px] pb-[120px] lg:pb-[150px] 
+          <div className='w-full h-[80%] pt-[100px] pb-[80px] lg:pb-[80px] 
           px-[40px] flex flex-col  gap-[50px] overflow-auto bg-black'>
           {/* messages will be shown here */}
           {messages && messages.map((mess,index)=>(
@@ -99,7 +114,7 @@ function MessageArea() {
           flex items-center gap-[10px] px-[20px] relative ' onSubmit={handleSendMessage}>
           
             {frontendImage && <div className='w-[100px] rounded-2xl h-[100px] absolute top-[120px]
-            right-[10px] overflow-hidden'><img src={frontendImage} alt=""  className='h-full  object-cover '/>
+            right-[10px] overflow-hidden bg-white'><img src={frontendImage} alt=""  className='h-full  object-cover '/>
             </div>}
             <input type='file' accept='image/*' hidden ref={imageInput} onChange={handleImage}/>
             

@@ -13,7 +13,9 @@ export const sendMessage=async(req,res)=>{
         let image ;
       
             if(req.file){
-                image=await uploadOnCloudinary(req.file.path)
+                // 
+                const uploaded = await uploadOnCloudinary(req.file.path);
+      image = uploaded.secure_url || uploaded.url; // ✅ store only URL
             }
       
             const newMessage=await Message.create({
