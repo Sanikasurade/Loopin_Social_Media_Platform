@@ -29,7 +29,7 @@ function App() {
     const dispatch=useDispatch();
   useEffect(()=>{
     if(userData){
-      const socketIo=io(serverUrl,{
+      const socketIo=io(`${serverUrl}`,{
         query:{
           userId:userData._id
         }
@@ -37,20 +37,18 @@ function App() {
       dispatch(setSocket(socketIo))
       socketIo.on('getOnlineUsers',(users)=>{
         dispatch(setOnlineUsers(users))
+        console.log("Online Users:",users);
       })
       return ()=>socketIo.close()
 
     }else{
       if(socket){
-        socket.io('getOnlineUsers',(users)=>{
-          dispatch(setOnlineUsers(users))
-        })
         socket.close()
         dispatch(setSocket(null))
      
       }
     }
-  },[])
+  },[userData])
  
   return (
     <Routes>

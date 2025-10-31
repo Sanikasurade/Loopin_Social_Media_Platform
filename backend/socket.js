@@ -13,7 +13,7 @@ cors:{
 
 const userSocketMap={}
 io.on("connection",(socket)=>{
-    const userId=socket.handshake.query.userID
+    const userId=socket.handshake.query.userId
     if(userId!=undefined){
         userSocketMap[userId]=socket.id
     }
