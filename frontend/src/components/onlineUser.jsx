@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { setSelectedUser } from "../redux/messageSlice";
 import dp1 from '../assets/dp.jpg'
-function onlineUser({user}){
+
+function OnlineUser({user}){
     const navigate=useNavigate();
     const dispatch=useDispatch();
     return(
-        <div className="W-[60PX] H-[60PX] flex gap-[20px]
+        <div className="W-[50px] H-[50px] flex gap-[20px]
          justify-start items-center relative">
             <div className='w-[40px] h-[40px] border-2 border-black
             rounded-full cursor-pointer overflow-hidden'
@@ -18,10 +19,11 @@ function onlineUser({user}){
             className='w-full object-cover'/>
         <div className="w-[12px] h-[12px] bg-green-500
          border-2 border-black rounded-full 
-         absolute bottom-0 right-0">
+         absolute top-0 right-0">
 
         </div>
         </div> 
         </div>
     )
 }
+export default OnlineUser;  
