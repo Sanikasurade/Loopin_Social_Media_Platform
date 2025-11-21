@@ -23,6 +23,8 @@ import { setUserData } from '../redux/userSlice.js';
 import FollowButton from './FollowButton.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+// import { Server } from "socket.io"; 
+
 
 
 
@@ -75,10 +77,20 @@ const handleComment=async()=>{
             console.log(error.response)
         }
     }
-    // useEffect(()=>{
-    //     socket?.on("likedPost",(updatedData)=>{
+    useEffect(()=>{
+        socket?.on("likedPost",(updatedData)=>{
+            const updatedPosts=postData.map(p=>p._id==updatedData.postId?{...p,likes:updatedData.likes}:p)
+            dispatch(setPostData(updatedPosts))
 
-    // }
+    })
+    socket?.on("CommentedPost",(updatedData)=>{
+            const updatedPosts=postData.map(p=>p._id==updatedData.postId?{...p,comments:updatedData.comments}:p)
+            dispatch(setPostData(updatedPosts))
+
+    })
+    return ()=>{socket?.off("likedPost");
+        socket?.off("CommentedPost")}
+},[socket,postData,dispatch])
 
     return (
         /*Container for individual post*/
@@ -187,5 +199,4 @@ const handleComment=async()=>{
     </div>
     );
 }
-
 export default Post;
