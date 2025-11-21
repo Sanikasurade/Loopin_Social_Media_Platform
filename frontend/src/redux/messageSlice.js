@@ -1,24 +1,37 @@
-import {createSlice} from "@reduxjs/toolkit"
-const messageSlice=createSlice({
-    name:"message",
-    initialState:{
-       selectedUser:null,
-       messages:[],
-       prevChatUsers:null
-       
+
+
+
+import { createSlice } from "@reduxjs/toolkit";
+
+const messageSlice = createSlice({
+  name: "message",
+  initialState: {
+    selectedUser: null,
+    messages: [],
+    prevChatUsers: []
+  },
+  reducers: {
+    setSelectedUser: (state, action) => {
+      state.selectedUser = action.payload;
     },
-reducers:{
-    setSelectedUser:(state,action) =>{               //this will store the data of the user when they will signup
-    state.selectedUser = action.payload
-    } ,
-    
-    setMessages:(state,action) =>{           
-    state.messages = action.payload
-    }  ,
-     setPrevChatUsers:(state,action) =>{           
-    state.prevChatUsers = action.payload
-    }  
-}
-})
-export const { setSelectedUser,setMessages,setPrevChatUsers}=messageSlice.actions
-export default messageSlice.reducer
+
+    // Overwrite the full message list
+    setMessages: (state, action) => {
+      state.messages = action.payload;
+    },
+
+    // Add a single new message (used for real-time)
+    addMessage: (state, action) => {
+      state.messages.push(action.payload);
+    },
+
+    setPrevChatUsers: (state, action) => {
+      state.prevChatUsers = action.payload;
+    }
+  }
+});
+
+export const { setSelectedUser, setMessages, addMessage, setPrevChatUsers } =
+  messageSlice.actions;
+
+export default messageSlice.reducer;

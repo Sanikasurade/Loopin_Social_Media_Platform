@@ -1,6 +1,8 @@
 import Conversation from "../models/conversation.model.js"
 import Message from "../models/message.model.js"
 import uploadOnCloudinary from '../config/cloudinary.js'
+import { getSocketId, io } from "../socket.js"
+ 
 
 
 
@@ -13,9 +15,9 @@ export const sendMessage=async(req,res)=>{
         let image ;
       
             if(req.file){
-                // 
+                 
                 const uploaded = await uploadOnCloudinary(req.file.path);
-      image = uploaded.secure_url || uploaded.url; // ✅ store only URL
+                image = uploaded.secure_url || uploaded.url; // ✅ store only URL
             }
       
             const newMessage=await Message.create({
@@ -37,11 +39,17 @@ export const sendMessage=async(req,res)=>{
         conversation.messages.push(newMessage._id)
         await conversation.save()
     }
+    const receiverSocketId=getSocketId(receiverId)
+
+    if(receiverSocketId){
+        io.to(receiverSocketId).emit("newMessage",newMessage)
+    }
+    
     return res.status(200).json(newMessage)
-
     }catch(error){
-        return res.status(500).json({message:`send Messasge error ${error}`})
+        return res.status(500).json({message:`send Message error ${error}`})
 
+         
     }
     
 }

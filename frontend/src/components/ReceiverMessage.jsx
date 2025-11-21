@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 
 
@@ -7,9 +8,13 @@ function ReceiverMessage({message}) {
     const {userData}=useSelector(state=>state.user)
         const {selectedUser}=useSelector(state=>state.message)
         console.log("Rendering message:", message);
+        const scroll=React.useRef();
+         useEffect(()=>{
+                scroll.current.scrollIntoView({behavior:"smooth"})
+            },[message.message,message.image])
 
     return (
-        <div className='w-fit max-w-[60%] bg-gradient-to-br from-[#9500ff]
+        <div ref={scroll} className='w-fit max-w-[60%] bg-gradient-to-br from-[#9500ff]
              to-[#39F3F3] rounded-t-2xl rounded-br-2xl  rounded-bl-0 px-[10px] relative
              left-0 flex flex-col gap-[10px]'>
             {message.image &&  <img src={message.image} alt="" className='h-[200px] object-cover rounded-2xl'/> }

@@ -22,10 +22,14 @@ import { useState } from 'react';
 import { setUserData } from '../redux/userSlice.js';
 import FollowButton from './FollowButton.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
+
 
 function Post({post}) {
     const {userData} = useSelector(state=>state.user)
     const {postData} = useSelector(state=>state.post)
+    const {socket}=useSelector(state=>state.socket)
     const [showComment,setShowComment]= useState(false);
     const [message,setMessage]=useState("");
     const dispatch=useDispatch();
@@ -71,6 +75,10 @@ const handleComment=async()=>{
             console.log(error.response)
         }
     }
+    // useEffect(()=>{
+    //     socket?.on("likedPost",(updatedData)=>{
+
+    // }
 
     return (
         /*Container for individual post*/

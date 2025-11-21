@@ -2,10 +2,11 @@ import React from 'react';
 import { IoArrowBackOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import OnlineUser from '../components/onlineUser';
 import { useDispatch } from 'react-redux';
-import { setSelectedUser } from '../redux/messageSlice';
+import OnlineUser from '../components/onlineUser.jsx';
+import { setSelectedUser } from '../redux/messageSlice.js';
 import dp1 from '../assets/dp.jpg'
+
 function Messages() {
   const navigate=useNavigate();
   const {userData}=useSelector(state=>state.user)
@@ -40,9 +41,10 @@ function Messages() {
                       rounded-full cursor-pointer overflow-hidden'> 
                       <img src={ user.profileImage || dp1} alt="" className='w-full object-cover'/>
                       </div>}
+                      
                       <div className='flex flex-col gap-[10px]'>
                         <div className='text-white text-[18px] font-semibold'>{user.userName}</div>
-                            {onlineUsers?.includes(user?._id)?  <div className='text-blue-400 text-[15px]'>Active Now</div> : <div>Offline</div>}
+                          {onlineUsers?.includes(user?._id)?  <div className='text-blue-400 text-[15px]'>Active Now</div> : <div>Offline</div>}
                         </div>
                   </div>
        ))}

@@ -58,8 +58,13 @@ export const like=async(req,res)=>{
     }else{
         post.likes.push(req.userId)
     }
+   
     await post.save()
     await post.populate("author", "name userName profileImage");
+    io.emit("likedPost",{
+        postId:post._id,
+        likes:post.likes
+    })
      return res.status(200).json(post);
     } catch(error){
 
@@ -81,6 +86,10 @@ post.comments.push({
 await post.save()
  await post.populate("author", "name userName profileImage")
  await post.populate("comments.author")
+    io.emit("CommentedPost",{
+        postId:post._id,
+        comments:post.comments
+    })
 console.log("printing data:",populatedPost);
 return res.status(200).json(post);
     }catch(error){

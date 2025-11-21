@@ -8,7 +8,7 @@ const socketSlice=createSlice({
     },
 reducers:{
     setSocket:(state,action) =>{               //this will store the data of the user when they will signup
-    state.selectedUser = action.payload
+    state.socket = action.payload
     } ,
     
     setOnlineUsers:(state,action) =>{           

@@ -56,6 +56,10 @@ export const like=async(req,res)=>{
     await loop.save()
      // Always populate before sending the response
     await loop.populate("author", "name userName profileImage");
+    io.emit("LikedLoop",{
+      loopId:loop._id,
+      likes:loop.likes
+    })
      return res.status(200).json(loop);
     } catch(error){
        console.error("likeLoop error:", error);
@@ -74,12 +78,16 @@ if(!loop){
 }
 loop.comments.push({
     author:req.userId,
-    message,
+    message
 })
 await loop.save()
  // Proper population for author and comment authors
 await loop.populate("author", "name userName profileImage"),
 await loop.populate("comments.author");
+ io.emit("CommentedOnLoop",{
+      loopId:loop._id,
+      comments:loop.comments
+    })
 return res.status(200).json(loop);
     }catch(error){
        console.error("comment error:", error);
