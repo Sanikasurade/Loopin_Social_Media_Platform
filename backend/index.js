@@ -16,7 +16,7 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173", //frontend url
+    origin: "https://loopin-social-media-platform-frontend.onrender.com", //frontend url
     credentials: true, //
   })
 );
