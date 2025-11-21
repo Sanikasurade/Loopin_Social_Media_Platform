@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import SignUp from "./pages/SignUp.jsx";
 import SignIn from "./pages/SignIn.jsx";
-import ForgotPassword from "./pages/ForgotPassword_temp.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 import Home from "./pages/Home.jsx";
 import getCurrentUser from "./hooks/getCurrentUser.jsx";
 import { useDispatch, useSelector } from "react-redux";
