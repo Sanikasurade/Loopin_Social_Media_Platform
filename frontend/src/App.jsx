@@ -20,7 +20,7 @@ import getFollowingList from "./hooks/getFollowingList.jsx";
 import getPrevChatUsers from "./hooks/getPrevchatUsers.jsx";
 
 
-export const serverUrl="http://localhost:5000"
+export const serverUrl="https://loopin-social-media-platform-backend.onrender.com"
 function App() {
   getCurrentUser();
   getSuggestedUsers();
