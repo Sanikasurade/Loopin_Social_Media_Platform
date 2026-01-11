@@ -94,17 +94,4 @@ The project demonstrates real-world implementation of full-stack development con
 - Designed scalable backend APIs
 - Strengthened understanding of authentication and state management
 
----
-
-## 👩‍💻 Author
-
-**Sanika Surade**  
-MCA Student | MERN Stack Developer  
-Focused on building scalable and user-centric web applications
-
----
-
-## 📄 License
-
-This project is created for academic and learning purposes.
 
